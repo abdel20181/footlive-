@@ -232,7 +232,10 @@ function isT(s){const d=toM(s),n=toM(new Date().toISOString());return d.toDateSt
 
 // Fetch football-data.org — CORS natif, appel direct
 async function apiFetch(comp, from, to) {
-  const url = `${FDBASE}/competitions/${comp.id}/matches?dateFrom=${from}&dateTo=${to}`;
+  // Pour la Coupe du Monde, utiliser toute la fenêtre de la compétition
+  let f = from, t = to;
+  if(comp.id === "WC") { f = "2026-06-11"; t = "2026-07-19"; }
+  const url = `${FDBASE}/competitions/${comp.id}/matches?dateFrom=${f}&dateTo=${t}`;
   try {
     const r = await fetch(url, {
       headers: {"X-Auth-Token": FDKEY},
