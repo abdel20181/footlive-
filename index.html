@@ -616,9 +616,9 @@ function card(m,type){
       const start = new Date(utcDate).getTime();
       const now = Date.now();
       const elapsed = Math.floor((now - start) / 60000);
-      if(elapsed <= 45) return Math.min(elapsed, 45);
-      if(elapsed <= 60) return 45; // mi-temps ~15min
-      return Math.min(elapsed - 15, 90); // 2ème mi-temps
+      if(elapsed <= 45) return Math.min(elapsed, 45);       // 1ère mi-temps
+      if(elapsed <= 57) return 45;                           // mi-temps (12 min)
+      return Math.min(elapsed - 12, 90);                    // 2ème mi-temps (-12min pause)
     }
     const calculatedMin = m.minute || calcMin(m.utcDate);
     const minDisplay = isPaused ? 'MI-TEMPS' : `${calculatedMin}'`;
