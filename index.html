@@ -611,22 +611,13 @@ function card(m,type){
   if(type==='live'){
     cls='live'; bar='<div class="lbar"></div>';
     const isPaused = m.status==='PAUSED';
-    // Calculer les minutes écoulées depuis le début du match
-    function calcMin(utcDate){
-      const start = new Date(utcDate).getTime();
-      const now = Date.now();
-      const elapsed = Math.floor((now - start) / 60000);
-      if(elapsed <= 45) return Math.min(elapsed, 45);       // 1ère mi-temps
-      if(elapsed <= 57) return 45;                           // mi-temps (12 min)
-      return Math.min(elapsed - 12, 90);                    // 2ème mi-temps (-12min pause)
-    }
-    const calculatedMin = m.minute || calcMin(m.utcDate);
-    const minDisplay = isPaused ? 'MI-TEMPS' : `${calculatedMin}'`;
+    // Utiliser directement m.minute fourni par l'API football-data.org
+    const calculatedMin = m.minute ?? null;
     const src = m._liveApi?'⚡ ':'';
-    st=`<span class="cs sl-live">● ${src}${isPaused?'MI-TEMPS':'LIVE '+minDisplay}</span>`;
+    st=`<span class="cs sl-live">● ${src}${isPaused?'MI-TEMPS':(calculatedMin!==null?'LIVE '+calculatedMin+"'":'LIVE')}</span>`;
     const sh=m.score.fullTime.home??m.score.halfTime.home??0;
     const sa=m.score.fullTime.away??m.score.halfTime.away??0;
-    const minLabel = isPaused ? "⏸ MI-TEMPS" : `⏱ ${calculatedMin}'`;
+    const minLabel = isPaused ? "⏸ MI-TEMPS" : (calculatedMin!==null ? `⏱ ${calculatedMin}'` : '⏱ LIVE');
     sc=`<div style="display:flex;flex-direction:column;align-items:center;gap:3px">
       <div style="display:flex;align-items:center;gap:6px">
         <div class="sn2 live">${sh}</div>
